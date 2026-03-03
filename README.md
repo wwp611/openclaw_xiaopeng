@@ -1,2 +1,37 @@
-# openclaw-xiaopeng
-Mobile grid selector deployed by Xiaopeng Assistant
+# 📱 移动端网格选择器 - 专为 wwp611/openclaw-xiaopeng 部署
+
+## 🌐 在线访问
+https://wwp611.github.io/openclaw-xiaopeng/
+
+## 🎯 功能特性
+- ✅ **移动端优化** - 专为手机触摸设计
+- ✅ **8×8交互网格** - 轻触格子切换选择
+- ✅ **多种输出格式** - 矩阵、一维数组、CSV
+- ✅ **一键复制** - 方便粘贴到代码中
+- ✅ **离线可用** - 可以保存到手机本地使用
+- ✅ **GitHub Pages托管** - 永久免费公网访问
+
+## 📱 使用说明
+1. **轻触格子** - 切换选择状态（选中/取消）
+2. **点击按钮** - 生成矩阵、全选、随机、清空
+3. **复制结果** - 长按矩阵结果或使用复制按钮
+
+## 🔧 技术特点
+- 纯HTML/CSS/JavaScript，无外部依赖
+- 响应式设计，适配各种屏幕尺寸
+- 触摸优化，适合手机操作
+- 单文件设计，便于部署和维护
+
+## 🚀 部署信息
+- **GitHub用户名：** wwp611
+- **仓库名称：** openclaw-xiaopeng
+- **部署分支：** main (gh-pages自动部署)
+- **访问地址：** https://wwp611.github.io/openclaw-xiaopeng/
+
+## 📞 技术支持
+如有问题，请联系创建者。
+
+---
+**版本：** 1.0.0  
+**部署时间：** 2026-03-03  
+**创建者：** 小芃助手
