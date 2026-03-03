@@ -7,12 +7,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#667eea">
     
-    <!-- SEO 优化 -->
-    <meta name="description" content="移动端优化的8×8二进制矩阵生成工具，专为手机触摸操作设计">
-    <meta name="keywords" content="网格选择器,二进制矩阵,移动端工具,响应式设计,小芃助手">
+    <meta name="description" content="对称旋转网格生成器 - 8×8输入，16×16对称输出">
+    <meta name="keywords" content="对称旋转,网格生成,图案设计,数学艺术,小芃助手">
     <meta name="author" content="小芃助手">
     
-    <title>📱 移动端网格选择器 | wwp611/openclaw-xiaopeng</title>
+    <title>🔄 对称旋转网格生成器 | wwp611/openclaw_xiaopeng</title>
     
     <style>
         :root {
@@ -20,6 +19,8 @@
             --primary-dark: #764ba2;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
             --light: #f8fafc;
             --dark: #1e293b;
             --gray: #6e7781;
@@ -46,7 +47,7 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 24px 20px;
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             backdrop-filter: blur(20px);
         }
@@ -77,16 +78,6 @@
             font-weight: 600;
         }
         
-        .github-link {
-            color: #58a6ff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .github-link:hover {
-            text-decoration: underline;
-        }
-        
         .header {
             text-align: center;
             margin-bottom: 28px;
@@ -98,7 +89,7 @@
             color: var(--dark);
             font-size: 1.8em;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             background: linear-gradient(45deg, var(--primary), var(--primary-dark));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -109,23 +100,49 @@
             color: var(--gray);
             font-size: 0.95em;
             line-height: 1.5;
+            margin-bottom: 16px;
         }
         
-        .deploy-status {
-            background: linear-gradient(135deg, var(--success), #0da06c);
-            color: white;
+        .algorithm-info {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
             padding: 16px;
             border-radius: 12px;
             margin: 20px 0;
-            text-align: center;
+            border-left: 4px solid var(--primary);
         }
         
-        .deploy-status h3 {
-            font-size: 1.1em;
+        .algorithm-info h3 {
+            color: var(--primary);
+            font-size: 1em;
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .grid-section {
+        .algorithm-info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .algorithm-info li {
+            color: var(--gray);
+            font-size: 0.85em;
+            line-height: 1.6;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .algorithm-info li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .input-section {
             background: var(--light);
             border-radius: 20px;
             padding: 20px;
@@ -133,16 +150,19 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
         
-        .grid-title {
+        .input-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
         
-        .grid-title h2 {
+        .input-title h2 {
             font-size: 1.2em;
             color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .selected-count {
@@ -157,10 +177,10 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
-            gap: 6px;
+            gap: 4px;
             margin: 0 auto;
             background: white;
-            padding: 16px;
+            padding: 12px;
             border-radius: 16px;
             border: 2px solid #e2e8f0;
             box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -170,7 +190,7 @@
             aspect-ratio: 1;
             background: white;
             border: 2px solid #cbd5e1;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
@@ -178,7 +198,7 @@
             justify-content: center;
             align-items: center;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             user-select: none;
             position: relative;
             overflow: hidden;
@@ -194,7 +214,7 @@
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             opacity: 0;
             transition: opacity 0.2s;
-            border-radius: 10px;
+            border-radius: 6px;
         }
         
         .grid-cell.selected::after {
@@ -205,8 +225,8 @@
             position: relative;
             z-index: 1;
             color: var(--gray);
-            font-size: 10px;
-            margin-bottom: 2px;
+            font-size: 9px;
+            margin-bottom: 1px;
         }
         
         .grid-cell.selected .cell-number {
@@ -217,7 +237,7 @@
             position: relative;
             z-index: 1;
             color: var(--dark);
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 800;
         }
         
@@ -229,48 +249,27 @@
             transform: scale(0.95);
         }
         
-        .grid-cell.selected {
-            border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-        }
-        
         .controls {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            gap: 12px;
             margin: 28px 0;
         }
         
         .control-btn {
-            padding: 18px 16px;
+            padding: 16px 12px;
             border: none;
             border-radius: 16px;
-            font-size: 1em;
+            font-size: 0.95em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             position: relative;
             overflow: hidden;
-        }
-        
-        .control-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .control-btn:active::before {
-            opacity: 1;
         }
         
         .btn-primary {
@@ -295,17 +294,6 @@
             transform: translateY(2px);
         }
         
-        .btn-danger {
-            background: white;
-            color: var(--danger);
-            border: 2px solid #fecaca;
-        }
-        
-        .btn-danger:active {
-            background: #fef2f2;
-            transform: translateY(2px);
-        }
-        
         .output-section {
             background: white;
             border-radius: 20px;
@@ -315,70 +303,150 @@
             margin-top: 28px;
         }
         
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .output-header h2 {
+        .output-title {
             font-size: 1.2em;
             color: var(--dark);
+            margin-bottom: 20px;
+            text-align: center;
         }
         
-        .copy-btn {
-            background: linear-gradient(135deg, var(--success), #0da06c);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 10px 20px;
+        .quadrants {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .quadrant {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .quadrant h3 {
             font-size: 0.9em;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
+            color: var(--dark);
+            margin-bottom: 12px;
+            text-align: center;
         }
         
-        .copy-btn:active {
-            transform: scale(0.95);
-            opacity: 0.9;
+        .quadrant-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            margin: 0 auto;
+        }
+        
+        .quadrant-cell {
+            aspect-ratio: 1;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 8px;
+            font-weight: 700;
+        }
+        
+        .quadrant-cell.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .final-output {
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .final-output h3 {
+            font-size: 1em;
+            color: var(--dark);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .final-grid {
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            gap: 1px;
+            margin: 0 auto;
+            background: #cbd5e1;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .final-cell {
+            aspect-ratio: 1;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 6px;
+            font-weight: 700;
+        }
+        
+        .final-cell.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
         }
         
         .matrix-output {
             background: #f8fafc;
             border-radius: 16px;
             padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #e2e8f0;
             font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.5;
             overflow-x: auto;
-            border: 1px solid #e2e8f0;
             white-space: pre-wrap;
             word-wrap: break-word;
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
         }
         
-        .matrix-output::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+        .copy-section {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
         }
         
-        .matrix-output::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 10px;
+        .copy-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
         }
         
-        .matrix-output::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
+        .copy-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
         }
         
-        .matrix-output::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #0da06c);
+            color: white;
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, var(--info), #2563eb);
+            color: white;
         }
         
         .footer {
@@ -386,85 +454,9 @@
             margin-top: 32px;
             padding-top: 20px;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .footer p {
             color: var(--gray);
             font-size: 0.85em;
             line-height: 1.5;
-            margin-bottom: 8px;
-        }
-        
-        .tips {
-            background: rgba(102, 126, 234, 0.1);
-            padding: 16px;
-            border-radius: 16px;
-            margin-top: 20px;
-            text-align: left;
-        }
-        
-        .tips h3 {
-            color: var(--primary);
-            font-size: 1em;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .tips ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        .tips li {
-            color: var(--gray);
-            font-size: 0.85em;
-            line-height: 1.6;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-        
-        .tips li::before {
-            content: "•";
-            color: var(--primary);
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-        
-        @media (max-width: 480px) {
-            body {
-                padding: 16px 12px 80px;
-            }
-            
-            .container {
-                padding: 20px 16px;
-            }
-            
-            h1 {
-                font-size: 1.6em;
-            }
-            
-            .grid-cell {
-                font-size: 11px;
-                border-radius: 10px;
-            }
-            
-            .controls {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            
-            .control-btn {
-                padding: 16px;
-            }
-            
-            .matrix-output {
-                font-size: 12px;
-                padding: 16px;
-            }
         }
         
         .toast {
@@ -491,98 +483,165 @@
             opacity: 1;
         }
         
-        .matrix-output {
-            -webkit-overflow-scrolling: touch;
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 16px;
+            }
+            
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            .grid-cell {
+                font-size: 10px;
+            }
+            
+            .controls {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .quadrants {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .quadrant-cell {
+                font-size: 7px;
+            }
+            
+            .final-cell {
+                font-size: 5px;
+            }
+            
+            .copy-section {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="github-header">
         <div class="github-info">
-            <div class="github-badge">GitHub Pages</div>
-            <div class="github-badge">✅ 已部署</div>
+            <div class="github-badge">🔄 对称旋转版</div>
+            <div class="github-badge">🎨 16×16 图案</div>
         </div>
         <div style="font-size: 0.9em; opacity: 0.9;">
-            仓库: 
-            <a href="https://github.com/wwp611/openclaw-xiaopeng" class="github-link" target="_blank">
-                wwp611/openclaw-xiaopeng
-            </a>
+            仓库: wwp611/openclaw_xiaopeng
         </div>
     </div>
     
     <div class="container">
         <div class="header">
-            <h1>📱 GitHub Pages 部署版</h1>
-            <p class="subtitle">专为移动端优化的8×8二进制矩阵生成工具</p>
+            <h1>🔄 对称旋转网格生成器</h1>
+            <p class="subtitle">8×8输入 → 16×16对称输出 | 第一象限 + 旋转生成</p>
+            
+            <div class="algorithm-info">
+                <h3>🔄 旋转算法说明</h3>
+                <ul>
+                    <li><strong>第一象限：</strong>用户输入的8×8图案</li>
+                    <li><strong>第二象限：</strong>第一象限逆时针旋转90°</li>
+                    <li><strong>第三象限：</strong>第一象限旋转180°</li>
+                    <li><strong>第四象限：</strong>第一象限逆时针旋转270°</li>
+                </ul>
+            </div>
         </div>
         
-        <div class="deploy-status">
-            <h3>✅ 已成功部署到 GitHub Pages</h3>
-            <p>你的网站现在可以通过公网永久访问！</p>
-        </div>
-        
-        <div class="grid-section">
-            <div class="grid-title">
-                <h2>📱 8×8 交互网格</h2>
+        <div class="input-section">
+            <div class="input-title">
+                <h2><span>🎨</span> 第一象限 (输入)</h2>
                 <div class="selected-count">已选: <span id="selected-count">0</span></div>
             </div>
             
-            <div class="grid-container" id="grid">
-                <!-- 网格通过JavaScript动态生成 -->
+            <div class="grid-container" id="input-grid">
+                <!-- 8×8输入网格通过JavaScript生成 -->
             </div>
         </div>
         
         <div class="controls">
-            <button class="control-btn btn-primary" onclick="generateMatrix()">
-                <span>✅</span>
-                <span>生成矩阵</span>
+            <button class="control-btn btn-primary" onclick="generatePattern()">
+                <span>🔄</span>
+                <span>生成对称图案</span>
             </button>
             <button class="control-btn btn-secondary" onclick="selectAll()">
                 <span>🌟</span>
                 <span>全选</span>
             </button>
-            <button class="control-btn btn-secondary" onclick="randomSelect()">
+            <button class="control-btn btn-secondary" onclick="randomPattern()">
                 <span>🎲</span>
-                <span>随机选</span>
+                <span>随机图案</span>
             </button>
-            <button class="control-btn btn-danger" onclick="clearSelection()">
+            <button class="control-btn btn-secondary" onclick="clearAll()">
                 <span>🗑️</span>
                 <span>清空</span>
             </button>
         </div>
         
         <div class="output-section">
-            <div class="output-header">
-                <h2>📊 矩阵输出</h2>
-                <button class="copy-btn" onclick="copyMatrix()">
-                    <span>📋</span>
-                    <span>复制</span>
-                </button>
-            </div>
-            <div class="matrix-output" id="matrix-output">
-                <div style="color: #94a3b8; text-align: center; padding: 30px 20px;">
-                    <div style="font-size: 48px; margin-bottom: 16px;">📱</div>
-                    <div style="font-weight: 600; margin-bottom: 8px; color: #64748b;">等待生成矩阵</div>
-                    <div style="font-size: 0.9em;">请先选择一些格子，然后点击【生成矩阵】</div>
+            <h2 class="output-title">📊 对称旋转结果</h2>
+            
+            <div class="quadrants">
+                <div class="quadrant">
+                    <h3>第一象限 (原始)</h3>
+                    <div class="quadrant-grid" id="quadrant1">
+                        <!-- 第一象限显示 -->
+                    </div>
+                </div>
+                
+                <div class="quadrant">
+                    <h3>第二象限 (旋转90°)</h3>
+                    <div class="quadrant-grid" id="quadrant2">
+                        <!-- 第二象限显示 -->
+                    </div>
+                </div>
+                
+                <div class="quadrant">
+                    <h3>第三象限 (旋转180°)</h3>
+                    <div class="quadrant-grid" id="quadrant3">
+                        <!-- 第三象限显示 -->
+                    </div>
+                </div>
+                
+                <div class="quadrant">
+                    <h3>第四象限 (旋转270°)</h3>
+                    <div class="quadrant-grid" id="quadrant4">
+                        <!-- 第四象限显示 -->
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="tips">
-            <h3>📱 手机使用提示</h3>
-            <ul>
-                <li>轻触格子切换选择状态（选中/取消）</li>
-                <li>支持多点触控，可以快速选择多个格子</li>
-                <li>生成的矩阵支持复制，可以直接用于代码</li>
-                <li>响应式设计，横竖屏都能完美显示</li>
-                <li>添加至手机主屏幕，可获得原生应用体验</li>
-            </ul>
+            
+            <div class="final-output">
+                <h3>🎯 最终16×16对称图案</h3>
+                <div class="final-grid" id="final-grid">
+                    <!-- 16×16最终图案 -->
+                </div>
+            </div>
+            
+            <div class="matrix-output" id="matrix-output">
+                <div style="color: #94a3b8; text-align: center; padding: 30px 20px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🔄</div>
+                    <div style="font-weight: 600; margin-bottom: 8px; color: #64748b;">等待生成对称图案</div>
+                    <div style="font-size: 0.9em;">请先选择输入图案，然后点击【生成对称图案】</div>
+                </div>
+            </div>
+            
+            <div class="copy-section">
+                <button class="copy-btn btn-success" onclick="copyMatrix()">
+                    <span>📋</span>
+                    <span>复制16×16矩阵</span>
+                </button>
+                <button class="copy-btn btn-info" onclick="copyFlattened()">
+                    <span>📋</span>
+                    <span>复制一维数组</span>
+                </button>
+            </div>
         </div>
         
         <div class="footer">
-            <p>🌐 访问地址: https://wwp611.github.io/openclaw-xiaopeng/</p>
-            <p>🚀 由 GitHub Pages 提供托管服务</p>
-            <p>⏱️ 部署时间: 2026-03-03</p>
+            <p>🌐 访问地址: https://wwp611.github.io/openclaw_xiaopeng/</p>
+            <p>🔄 旋转对称算法 | 8×8 → 16×16 图案扩展</p>
+            <p>⏱️ 更新时间: 2026-03-03</p>
         </div>
     </div>
     
@@ -591,12 +650,12 @@
 
     <script>
         // 初始化变量
-        const grid = document.getElementById('grid');
+        const inputGrid = document.getElementById('input-grid');
         const selectedCells = new Set();
         
-        // 创建8×8网格
-        function createGrid() {
-            grid.innerHTML = '';
+        // 创建8×8输入网格
+        function createInputGrid() {
+            inputGrid.innerHTML = '';
             
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
@@ -621,7 +680,7 @@
                     
                     cell.appendChild(cellNumber);
                     cell.appendChild(cellValue);
-                    grid.appendChild(cell);
+                    inputGrid.appendChild(cell);
                 }
             }
         }
@@ -665,11 +724,9 @@
             document.getElementById('selected-count').textContent = selectedCells.size;
         }
         
-        // 生成矩阵
-        function generateMatrix() {
+        // 生成输入矩阵
+        function getInputMatrix() {
             const matrix = [];
-            
-            // 生成8×8矩阵
             for (let row = 0; row < 8; row++) {
                 const rowArray = [];
                 for (let col = 0; col < 8; col++) {
@@ -677,49 +734,175 @@
                 }
                 matrix.push(rowArray);
             }
+            return matrix;
+        }
+        
+        // 旋转矩阵90度（逆时针）
+        function rotateMatrix90(matrix) {
+            const n = matrix.length;
+            const rotated = [];
+            for (let i = 0; i < n; i++) {
+                rotated[i] = [];
+                for (let j = 0; j < n; j++) {
+                    rotated[i][j] = matrix[j][n - 1 - i];
+                }
+            }
+            return rotated;
+        }
+        
+        // 旋转矩阵180度
+        function rotateMatrix180(matrix) {
+            const n = matrix.length;
+            const rotated = [];
+            for (let i = 0; i < n; i++) {
+                rotated[i] = [];
+                for (let j = 0; j < n; j++) {
+                    rotated[i][j] = matrix[n - 1 - i][n - 1 - j];
+                }
+            }
+            return rotated;
+        }
+        
+        // 旋转矩阵270度（逆时针）
+        function rotateMatrix270(matrix) {
+            const n = matrix.length;
+            const rotated = [];
+            for (let i = 0; i < n; i++) {
+                rotated[i] = [];
+                for (let j = 0; j < n; j++) {
+                    rotated[i][j] = matrix[n - 1 - j][i];
+                }
+            }
+            return rotated;
+        }
+        
+        // 创建16×16最终矩阵
+        function createFinalMatrix(q1, q2, q3, q4) {
+            const finalMatrix = [];
             
-            // 格式化输出
+            // 上半部分：第一、二象限
+            for (let row = 0; row < 8; row++) {
+                finalMatrix[row] = [...q1[row], ...q2[row]];
+            }
+            
+            // 下半部分：第三、四象限
+            for (let row = 0; row < 8; row++) {
+                finalMatrix[row + 8] = [...q3[row], ...q4[row]];
+            }
+            
+            return finalMatrix;
+        }
+        
+        // 生成对称图案
+        function generatePattern() {
+            if (selectedCells.size === 0) {
+                showToast('⚠️ 请先选择一些格子作为第一象限');
+                return;
+            }
+            
+            // 获取输入矩阵
+            const inputMatrix = getInputMatrix();
+            
+            // 生成旋转矩阵
+            const q1 = inputMatrix; // 第一象限（原始）
+            const q2 = rotateMatrix90(q1); // 第二象限（旋转90°）
+            const q3 = rotateMatrix180(q1); // 第三象限（旋转180°）
+            const q4 = rotateMatrix270(q1); // 第四象限（旋转270°）
+            
+            // 生成16×16最终矩阵
+            const finalMatrix = createFinalMatrix(q1, q2, q3, q4);
+            
+            // 更新显示
+            updateQuadrantDisplay(q1, q2, q3, q4);
+            updateFinalDisplay(finalMatrix);
+            updateMatrixOutput(q1, q2, q3, q4, finalMatrix);
+            
+            showToast('✅ 对称图案生成成功！');
+        }
+        
+        // 更新象限显示
+        function updateQuadrantDisplay(q1, q2, q3, q4) {
+            updateQuadrant('quadrant1', q1);
+            updateQuadrant('quadrant2', q2);
+            updateQuadrant('quadrant3', q3);
+            updateQuadrant('quadrant4', q4);
+        }
+        
+        function updateQuadrant(elementId, matrix) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '';
+            
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = matrix[row][col] === 1 ? 'quadrant-cell active' : 'quadrant-cell';
+                    cell.textContent = matrix[row][col];
+                    element.appendChild(cell);
+                }
+            }
+        }
+        
+        // 更新最终显示
+        function updateFinalDisplay(matrix) {
+            const element = document.getElementById('final-grid');
+            element.innerHTML = '';
+            
+            for (let row = 0; row < 16; row++) {
+                for (let col = 0; col < 16; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = matrix[row][col] === 1 ? 'final-cell active' : 'final-cell';
+                    cell.textContent = matrix[row][col];
+                    element.appendChild(cell);
+                }
+            }
+        }
+        
+        // 更新矩阵输出
+        function updateMatrixOutput(q1, q2, q3, q4, finalMatrix) {
             let output = '<div style="color: #1e293b; font-family: monospace;">';
-            output += '╔══════════════════════════════════════╗<br>';
-            output += '║        8×8 二进制矩阵                ║<br>';
-            output += '║      1 = 选中 | 0 = 未选中           ║<br>';
-            output += '╚══════════════════════════════════════╝<br><br>';
             
-            // 矩阵显示
-            matrix.forEach((row, rowIndex) => {
-                const rowStr = row.map((val, colIndex) => {
-                    const isSelected = val === 1;
-                    return `<span style="color: ${isSelected ? '#667eea' : '#94a3b8'}; font-weight: ${isSelected ? '800' : '500'};">${val}</span>`;
-                }).join('  ');
-                output += `<div style="margin-bottom: 4px;">${rowIndex}:  ${rowStr}</div>`;
+            output += '╔══════════════════════════════════════════════╗<br>';
+            output += '║       对称旋转图案生成器 (8×8 → 16×16)       ║<br>';
+            output += '╚══════════════════════════════════════════════╝<br><br>';
+            
+            // 各象限信息
+            output += '<div style="background: #f6f8fa; padding: 12px; border-radius: 8px; margin-bottom: 16px;">';
+            output += '<div style="font-weight: 600; color: #334155; margin-bottom: 8px;">📊 各象限信息:</div>';
+            output += '<div style="font-size: 0.9em; color: #475569;">';
+            output += '• 第一象限 (原始): 8×8 输入图案<br>';
+            output += '• 第二象限: 第一象限逆时针旋转90°<br>';
+            output += '• 第三象限: 第一象限旋转180°<br>';
+            output += '• 第四象限: 第一象限逆时针旋转270°<br>';
+            output += '</div></div>';
+            
+            // 最终16×16矩阵
+            output += '<div style="background: #f1f5f9; padding: 12px; border-radius: 8px; margin-bottom: 16px;">';
+            output += '<div style="font-weight: 600; color: #334155; margin-bottom: 8px;">🎯 最终16×16矩阵:</div>';
+            
+            finalMatrix.forEach(row => {
+                output += '<div style="font-size: 0.95em; margin-bottom: 2px;">';
+                output += row.map(val => `<span style="color: ${val ? '#667eea' : '#94a3b8'}; font-weight: ${val ? '800' : '500'};">${val}</span>`).join(' ');
+                output += '</div>';
             });
             
-            // 一维数组
-            output += '<br><div style="background: #f6f8fa; padding: 12px; border-radius: 8px; margin: 12px 0;">';
-            output += '<div style="font-weight: 600; color: #334155; margin-bottom: 8px;">📋 一维数组 (用于代码):</div>';
-            output += `<code style="color: #dc2626; font-size: 0.95em;">[${matrix.flat().join(', ')}]</code>`;
             output += '</div>';
             
-            // CSV格式
-            output += '<div style="background: #f6f8fa; padding: 12px; border-radius: 8px;">';
-            output += '<div style="font-weight: 600; color: #334155; margin-bottom: 8px;">📁 CSV格式:</div>';
-            matrix.forEach(row => {
-                output += `<div style="color: #475569; font-size: 0.95em;">${row.join(',')}</div>`;
-            });
+            // 一维数组
+            const flattened = finalMatrix.flat();
+            output += '<div style="background: #e0f2fe; padding: 12px; border-radius: 8px;">';
+            output += '<div style="font-weight: 600; color: #0c4a6e; margin-bottom: 8px;">📋 一维数组 (256个元素):</div>';
+            output += `<code style="color: #dc2626; font-size: 0.9em;">[${flattened.join(', ')}]</code>`;
             output += '</div>';
             
             // 统计信息
-            const selectedCount = matrix.flat().filter(v => v === 1).length;
+            const selectedCount = flattened.filter(v => v === 1).length;
             output += '<div style="margin-top: 16px; padding: 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 8px;">';
-            output += `<div style="font-weight: 600;">📊 统计: 选中 ${selectedCount} / 64 个格子 (${Math.round(selectedCount/64*100)}%)</div>`;
+            output += `<div style="font-weight: 600;">📊 统计: 选中 ${selectedCount} / 256 个格子 (${Math.round(selectedCount/256*100)}%)</div>`;
             output += '</div>';
             
             output += '</div>';
             
-            // 更新显示
             document.getElementById('matrix-output').innerHTML = output;
-            
-            showToast('✅ 矩阵生成成功！');
         }
         
         // 全选
@@ -736,16 +919,16 @@
             showToast('🌟 已全选所有格子');
         }
         
-        // 随机选择
-        function randomSelect() {
+        // 随机图案
+        function randomPattern() {
             selectedCells.clear();
             document.querySelectorAll('.grid-cell').forEach(cell => {
                 cell.classList.remove('selected');
                 cell.querySelector('.cell-value').textContent = '0';
             });
             
-            // 随机选择大约30%的格子
-            const randomCount = Math.floor(Math.random() * 20) + 10;
+            // 随机选择大约25%的格子
+            const randomCount = Math.floor(Math.random() * 10) + 6;
             
             for (let i = 0; i < randomCount; i++) {
                 const row = Math.floor(Math.random() * 8);
@@ -761,11 +944,16 @@
             }
             
             updateSelectedCount();
-            showToast('🎲 已随机选择格子');
+            showToast('🎲 已生成随机图案');
+            
+            // 自动生成对称图案
+            setTimeout(() => {
+                generatePattern();
+            }, 300);
         }
         
-        // 清空选择
-        function clearSelection() {
+        // 清空
+        function clearAll() {
             selectedCells.clear();
             document.querySelectorAll('.grid-cell').forEach(cell => {
                 cell.classList.remove('selected');
@@ -773,49 +961,76 @@
             });
             updateSelectedCount();
             
+            // 清空显示
+            ['quadrant1', 'quadrant2', 'quadrant3', 'quadrant4'].forEach(id => {
+                document.getElementById(id).innerHTML = '';
+            });
+            
+            document.getElementById('final-grid').innerHTML = '';
             document.getElementById('matrix-output').innerHTML = `
                 <div style="color: #94a3b8; text-align: center; padding: 30px 20px;">
-                    <div style="font-size: 48px; margin-bottom: 16px;">📱</div>
-                    <div style="font-weight: 600; margin-bottom: 8px; color: #64748b;">等待生成矩阵</div>
-                    <div style="font-size: 0.9em;">请先选择一些格子，然后点击【生成矩阵】</div>
+                    <div style="font-size: 48px; margin-bottom: 16px;">🔄</div>
+                    <div style="font-weight: 600; margin-bottom: 8px; color: #64748b;">等待生成对称图案</div>
+                    <div style="font-size: 0.9em;">请先选择输入图案，然后点击【生成对称图案】</div>
                 </div>
             `;
             
-            showToast('🗑️ 已清空所有选择');
+            showToast('🗑️ 已清空所有内容');
         }
         
-        // 复制矩阵到剪贴板
+        // 复制16×16矩阵
         function copyMatrix() {
             if (selectedCells.size === 0) {
-                showToast('⚠️ 请先选择一些格子');
+                showToast('⚠️ 请先生成对称图案');
                 return;
             }
             
-            const matrix = [];
-            for (let row = 0; row < 8; row++) {
-                const rowArray = [];
-                for (let col = 0; col < 8; col++) {
-                    rowArray.push(selectedCells.has(`${row},${col}`) ? 1 : 0);
-                }
-                matrix.push(rowArray);
-            }
+            const inputMatrix = getInputMatrix();
+            const q1 = inputMatrix;
+            const q2 = rotateMatrix90(q1);
+            const q3 = rotateMatrix180(q1);
+            const q4 = rotateMatrix270(q1);
+            const finalMatrix = createFinalMatrix(q1, q2, q3, q4);
             
-            // 生成纯文本矩阵
-            let text = '8×8 Binary Matrix (GitHub Pages 版)\n';
-            text += '仓库: wwp611/openclaw-xiaopeng\n';
-            text += '访问: https://wwp611.github.io/openclaw-xiaopeng/\n\n';
-            text += '1 = selected, 0 = not selected\n\n';
+            let text = '对称旋转图案生成器 - 16×16矩阵\n';
+            text += '仓库: wwp611/openclaw_xiaopeng\n';
+            text += '访问: https://wwp611.github.io/openclaw_xiaopeng/\n\n';
+            text += '8×8输入 → 16×16对称输出\n\n';
+            text += '最终16×16矩阵:\n';
             
-            matrix.forEach(row => {
+            finalMatrix.forEach(row => {
                 text += row.join('  ') + '\n';
             });
             
-            text += '\nFlattened array:\n[' + matrix.flat().join(', ') + ']\n\n';
-            text += 'Generated at: ' + new Date().toLocaleString('zh-CN');
+            text += '\n生成时间: ' + new Date().toLocaleString('zh-CN');
             
-            // 复制到剪贴板
             navigator.clipboard.writeText(text).then(() => {
-                showToast('📋 矩阵已复制到剪贴板！');
+                showToast('📋 16×16矩阵已复制到剪贴板！');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                showToast('❌ 复制失败，请手动选择文本');
+            });
+        }
+        
+        // 复制一维数组
+        function copyFlattened() {
+            if (selectedCells.size === 0) {
+                showToast('⚠️ 请先生成对称图案');
+                return;
+            }
+            
+            const inputMatrix = getInputMatrix();
+            const q1 = inputMatrix;
+            const q2 = rotateMatrix90(q1);
+            const q3 = rotateMatrix180(q1);
+            const q4 = rotateMatrix270(q1);
+            const finalMatrix = createFinalMatrix(q1, q2, q3, q4);
+            const flattened = finalMatrix.flat();
+            
+            let text = '[' + flattened.join(', ') + ']';
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('📋 一维数组已复制到剪贴板！');
             }).catch(err => {
                 console.error('复制失败:', err);
                 showToast('❌ 复制失败，请手动选择文本');
@@ -835,16 +1050,13 @@
         
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
-            createGrid();
-            randomSelect();
-            setTimeout(() => {
-                generateMatrix();
-            }, 500);
+            createInputGrid();
+            randomPattern();
             
-            console.log('🚀 GitHub Pages 部署版已加载');
+            console.log('🔄 对称旋转网格生成器已加载');
             console.log('👤 用户名: wwp611');
-            console.log('📦 仓库: openclaw-xiaopeng');
-            console.log('🌐 访问: https://wwp611.github.io/openclaw-xiaopeng/');
+            console.log('📦 仓库: openclaw_xiaopeng');
+            console.log('🌐 访问: https://wwp611.github.io/openclaw_xiaopeng/');
         });
     </script>
 </body>
